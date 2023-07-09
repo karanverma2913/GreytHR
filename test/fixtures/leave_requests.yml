@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_date: 2023-07-09
+  end_date: 2023-07-09
+  leave_type: MyString
+  reason: MyText
+  days: 9.99
+
+two:
+  start_date: 2023-07-09
+  end_date: 2023-07-09
+  leave_type: MyString
+  reason: MyText
+  days: 9.99
