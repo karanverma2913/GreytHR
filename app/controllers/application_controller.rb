@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API      
   include JsonWebToken
-  EMAIL = 'hr@123'
+  EMAIL = 'hr@gmail.com'
   PASSWORD = '12345'
 
   private
@@ -18,12 +18,10 @@ class ApplicationController < ActionController::API
 
     def authenticate_employee
       begin
-        # byebug
         header = request.headers["Authorization"]
         header = header.split(" ").last if header
         decoded = jwt_decode(header)
         @current_user = Employee.find_by_email(decoded[:email])
-        # raise if @current_user.nil?
       rescue
         render json: { error: 'Employee Token Needed'}
       end
@@ -33,7 +31,11 @@ class ApplicationController < ActionController::API
       @hr_user == EMAIL
     end
 
-    def unauthorized_error
-      render json: { error: 'You are not authorized to access this resource.' }, status: :unauthorized
+    def strip_attribute(object)
+        object.name = object.name.strip
+        object.email = object.email.strip
+        object.password = object.password.strip
+        object.role = object.role.strip
+        return object
     end
 end

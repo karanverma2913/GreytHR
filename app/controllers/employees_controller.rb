@@ -1,7 +1,7 @@
 class EmployeesController < ApplicationController
 	before_action :authenticate_employee, except: [:login] 
 
-	def update
+	def update 	
 		if @current_user.update(update_params)
 			render json: { message: 'Updatation Successful !'}
 		else

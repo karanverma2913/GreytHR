@@ -7,19 +7,20 @@ class HrController < ApplicationController
   
     def create
       @employee = Employee.new(employee_params)
+      @employee = strip_attribute(@employee)
       if @employee.save
         render json: { message: 'Employee Registration Successful !!! ' }
       else
-        render json: { message: 'Something Went Wrong !!! ' }, status: :unprocessable_entity
+        render json: @employee.errors, status: :unprocessable_entity
       end
     end
   
     def destroy
       @employee = Employee.find_by_id(params[:id])
       if @employee.nil?
-        render json: { message: 'No User With This ID' }
+        render json: { message: 'No Employee With This ID' }
       else
-        @employee.destroy
+        @employee.delete
         render json: { message: 'Employee Deleted !!'}
       end
     end

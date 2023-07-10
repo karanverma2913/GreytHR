@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_09_170646) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_10_082919) do
   create_table "employees", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -49,5 +49,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_09_170646) do
     t.index ["employee_id"], name: "index_leave_requests_on_employee_id"
   end
 
+  create_table "salaries", force: :cascade do |t|
+    t.integer "employee_id", null: false
+    t.integer "salary"
+    t.float "leave_taken"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["employee_id"], name: "index_salaries_on_employee_id"
+  end
+
   add_foreign_key "leave_requests", "employees"
+  add_foreign_key "salaries", "employees"
 end
