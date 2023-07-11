@@ -3,13 +3,17 @@ class ApplicationController < ActionController::API
   EMAIL = 'hr@gmail.com'
   PASSWORD = '12345'
 
+  before_action do
+    ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }
+  end
+
   private
     def authenticate_hr
       begin
         header = request.headers["Authorization"]
         header = header.split(" ").last if header
         decoded = jwt_decode(header)
-        @hr_user = decoded[:email]
+        hr_user = decoded[:email]
         raise unless is_hr?
       rescue
         render json: { error: 'HR Token Needed'}
@@ -21,7 +25,7 @@ class ApplicationController < ActionController::API
         header = request.headers["Authorization"]
         header = header.split(" ").last if header
         decoded = jwt_decode(header)
-        @current_user = Employee.find_by_email(decoded[:email])
+        current_user = Employee.find_by_email(decoded[:email])
       rescue
         render json: { error: 'Employee Token Needed'}
       end
@@ -29,13 +33,5 @@ class ApplicationController < ActionController::API
 
     def is_hr?
       @hr_user == EMAIL
-    end
-
-    def strip_attribute(object)
-        object.name = object.name.strip
-        object.email = object.email.strip
-        object.password = object.password.strip
-        object.role = object.role.strip
-        return object
     end
 end

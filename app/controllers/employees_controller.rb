@@ -2,16 +2,20 @@ class EmployeesController < ApplicationController
 	before_action :authenticate_employee, except: [:login] 
 
 	def update 	
-		if @current_user.update(update_params)
-			render json: { message: 'Updatation Successful !'}
-		else
-			render json: { message: 'Not Updated !'}
-		end
+		begin
+			if current_user.update(update_params)
+				render json: { message: 'Updatation Successful !'}
+			else
+				render json: { message: 'Not Updated !'}
+			end
+		rescue
+      render json: {message: 'Not Updated or No Id Found'}
+    end
 	end
 
 	def login
-		@employee = Employee.find_by_email(params[:email])
-		if @employee.password == params[:password]
+		employee = Employee.find_by_email(params[:email])
+		if employee.password == params[:password]
 			token = jwt_encode(email: @employee.email)
 			render json: { token: token }, status: :ok
 		else

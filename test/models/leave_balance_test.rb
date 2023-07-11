@@ -1,6 +1,6 @@
 require "test_helper"
 
-class SalaryTest < ActiveSupport::TestCase
+class LeaveBalanceTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

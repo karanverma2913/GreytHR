@@ -2,18 +2,18 @@ class HolidaysController < ApplicationController
   before_action :authenticate_hr, except: [:index]
 
   def index
-    @holidays = Holiday.all
-    if @events.nil?
+    holidays = Holiday.all
+    if holidays.nil?
       render json: {message: "No Entries !!!"}
     else
-      render json: @holidays, status: :see_others
+      render json: @holidays
     end
   end
 
   def create
     begin
-      @holiday = Holiday.new(holiday_params)
-      if @holiday.save
+      holiday = Holiday.new(holiday_params)
+      if holiday.save
         render json: @holiday
       else
         render json: @holiday.errors, status: :unprocessable_entity
@@ -24,14 +24,27 @@ class HolidaysController < ApplicationController
   end
 
   def show
-    @holiday = Event.find(params[:id])
-    render json: @holiday  
+    begin
+      holiday = Holiday.find(params[:id])
+      render json: holiday  
+    rescue
+      render json: {message: "Invalid Id"}
+    end
   end
 
-  def destroy
-    @holiday = Event.find(params[:id])
-    @holiday.destroy
+  def update
+    begin
+      holiday = Holiday.find(params[:id])
+      if holiday.update(holiday_params)
+        render json: holiday
+      else
+        render json: holiday.errors
+      end
+    rescue
+      render json: {error: 'Not Updated or No Id Found'}
+    end
   end
+
 
   private
     def holiday_params
