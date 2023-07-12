@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_11_141327) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_12_125959) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -48,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_11_141327) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "salary"
-    t.binary "image"
+    t.float "balance"
   end
 
   create_table "events", force: :cascade do |t|
@@ -66,19 +66,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_11_141327) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "leave_balances", force: :cascade do |t|
-    t.float "balance"
-    t.integer "employee_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["employee_id"], name: "index_leave_balances_on_employee_id"
-  end
-
   create_table "leave_requests", force: :cascade do |t|
     t.date "start_date"
     t.date "end_date"
     t.string "leave_type"
     t.text "reason"
+    t.decimal "days"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status"
@@ -88,6 +81,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_11_141327) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "leave_balances", "employees"
   add_foreign_key "leave_requests", "employees"
 end

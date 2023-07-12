@@ -13,9 +13,9 @@ Rails.application.routes.draw do
 
   post 'employee/login', to: 'employees#login'
   get 'employee/update', to: 'employees#update'
-
+  get 'employee/status', to: 'employees#show'
   get '/holidays', to: 'holidays#index'
-  
+
   resources :hr
   resources :employees
   resources :events
