@@ -1,19 +1,13 @@
 class EventsController < ApplicationController
   before_action :authenticate_hr, except: %i[index show]
+  before_action :find_event, only: %i[show update destroy]
   def index
     events = Event.all
-    if events.empty?
-      render json: { message: 'No Entries !!!' }
-    else
-      render json: events, status: :ok
-    end
+    render json: events, status: :ok
   end
 
   def show
-    event = Event.find(params[:id])
-    render json: event, status: :found
-  rescue Exception => e
-    render json: { error: 'No Entries With This Id' }
+    render json: @event, status: :found
   end
 
   def create
@@ -21,32 +15,29 @@ class EventsController < ApplicationController
     if event.save
       render json: event, status: :created
     else
-      render json: event.errors, status: :unprocessable_entity
+      render json: event.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def update
-    event = Event.find(params[:id])
-    if event.update(event_params)
-      render json: event
-    else
-      render json: event.errors
-    end
-  rescue Exception => e
-    render json: { message: 'Not Updated or No Id Found' }
+    @event.update(event_params)
+    render json: @event
   end
 
   def destroy
-    event = Event.find(params[:id])
-    event.destroy
+    @event.destroy
     render json: { message: 'Event Deleted !' }
-  rescue
-    render json: { message: 'No Event With This Id' }
   end
 
   private
 
   def event_params
     params.permit(:name, :description, :date)
+  end
+
+  def find_event
+    @event = Event.find(params[:id])
+  rescue Exception => e
+    render json: { errors: 'Id Not Found' }
   end
 end

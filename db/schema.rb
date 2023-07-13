@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_12_125959) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_143114) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -71,11 +71,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_12_125959) do
     t.date "end_date"
     t.string "leave_type"
     t.text "reason"
-    t.decimal "days"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status"
+    t.string "status", default: "pending"
     t.integer "employee_id"
+    t.decimal "days"
     t.index ["employee_id"], name: "index_leave_requests_on_employee_id"
   end
 

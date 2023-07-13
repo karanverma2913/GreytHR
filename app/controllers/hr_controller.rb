@@ -3,10 +3,10 @@ class HrController < ApplicationController
 
   def index
     employees = Employee.all
-    employees = employees.map do |course|
+    employees = employees.map do |i|
       {
-        details: course,
-        image: course.image.url
+        details: i,
+        image: i.image.url
       }
     end
     render json: employees, status: :ok
@@ -15,12 +15,7 @@ class HrController < ApplicationController
   def create
     employee = Employee.new(employee_params)
     employee.image.attach(params[:image])
-    month = 12 - employee.joining_date.strftime('%m').to_i
-    if month > 0
-      employee.balance = 1.5 * month
-    else
-      employee.balance = 1.5
-    end
+    employee.balance = set_leave_balance(employee)
     if employee.save
       render json: { message: 'Employee Registration Successful' }
     else
@@ -30,7 +25,7 @@ class HrController < ApplicationController
 
   def destroy
     employee = Employee.find(params[:id])
-    employee.destroy
+    employee.destroy!
     render json: { message: 'Employee Deleted !!' }
   rescue
     render json: { message: 'No Employee With This ID' }
@@ -51,4 +46,16 @@ class HrController < ApplicationController
   def employee_params
     params.permit(:name, :email, :password, :role, :salary, :joining_date, :balance, :image)
   end
+
+  def set_leave_balance(object)
+    month = 12 - object.joining_date.strftime('%m').to_i
+    if month > 0
+      month += 1
+      1.5 * month
+    else
+      1.5
+    end
+  end
+
 end
+

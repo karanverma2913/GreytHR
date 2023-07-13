@@ -1,13 +1,10 @@
 class HolidaysController < ApplicationController
-  before_action :authenticate_hr, except: [:index]
-
+  before_action :authenticate_hr, except: %i[index]
+  before_action :find_holiday, only: %i[show update]
+  
   def index
     holidays = Holiday.all
-    if holidays.empty?
-      render json: { message: 'No Entries !!!' }
-    else
-      render json: holidays
-    end
+    render json: holidays
   end
 
   def create
@@ -20,26 +17,26 @@ class HolidaysController < ApplicationController
   end
 
   def show
-    holiday = Holiday.find(params[:id])
-    render json: holiday
-  rescue Exception => e
-    render json: { message: 'Invalid Id' }
+    render json: @holiday
   end
 
   def update
-    holiday = Holiday.find(params[:id])
-    if holiday.update(holiday_params)
-      render json: holiday
+    if @holiday.update(holiday_params)
+      render json: @holiday
     else
-      render json: holiday.errors
+      render json: @holiday.errors
     end
-  rescue Exception => errors
-    render json: { error: 'Not Updated or No Id Found' }
   end
 
   private
 
   def holiday_params
     params.permit(:name, :date)
+  end
+
+  def find_holiday
+    @holiday = Holiday.find(params[:id])
+  rescue Exception => e
+    render json: { errors: 'Id Not Found' }
   end
 end

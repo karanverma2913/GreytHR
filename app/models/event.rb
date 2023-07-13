@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   def valid_date
     return if date.blank?
 
-    return unless date <= DateTime.now
+    return unless date <= Date.today
 
     errors.add(:date, 'Enter Valid Date ')
   end

@@ -16,24 +16,20 @@ class LeaveRequestsController < ApplicationController
   end
 
   def create
+    byebug
     last_request = @current_user.leave_requests.last
-    if last_request.nil? || last_request.status == 'approved' || last_request.status == 'rejected'
+    raise unless last_request.nil? || last_request.status != 'pending'
       leave_request = @current_user.leave_requests.new(leave_params)
-      leave_request.status = 'pending'
       dif = leave_request.end_date - leave_request.start_date
-      leave_request.days = dif.to_i + 1
-      raise if @current_user.balance <= leave_request.days
-
-      @current_user.balance -= leave_request.days
-      if leave_request.save && @current_user.save
+      raise if @current_user.balance <= dif.to_i + 1
+      leave_request.days = dif.to_i+1
+      @current_user.balance = @current_user.balance - dif.to_i + 1
+      if leave_request.save
+        @current_user.save
         render json: leave_request, status: :created
       else
         render json: leave_request.errors, status: :unprocessable_entity
       end
-    else
-      render json: { error: 'You have a pending leave request, cannot create newone !' },
-      status: :unprocessable_entity
-    end
   rescue Exception => e
     render json: { message: 'Insufficient balance' }
   end
@@ -46,10 +42,10 @@ class LeaveRequestsController < ApplicationController
   def destroy
     last_request = @current_user.leave_requests.last
     raise if last_request.nil? || last_request.status == 'approved' || last_request.status == 'rejected'
-    last_request.destroy
-    render json: { message: 'Leave Request Deleted !' }
+      last_request.destroy
+      render json: { message: 'Leave Request Deleted !' }
   rescue
-    render json: { error: 'Theirs is nothing to delete'} 
+      render json: { error: 'Theirs is nothing to Deleted'} 
   end
 
   def approve_request

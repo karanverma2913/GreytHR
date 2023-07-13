@@ -1,7 +1,7 @@
 class Employee < ApplicationRecord
   has_many :leave_requests, dependent: :destroy
   has_one_attached :image
-  validates :name, :email, :password, :salary, :role, presence: true
+  validates :name, :email, :password, :salary, :role, presence: true    
   validates :joining_date, presence: { message: 'Invalid date' }
   validates :name, format: { with: /\A[a-zA-Z]+(?: [a-zA-Z]+)?\z/,
                              message: 'only letters are allowed in name' }
