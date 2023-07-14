@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LeaveRequest < ApplicationRecord
   validates :start_date, :end_date, :days, presence: true
 
@@ -10,10 +12,10 @@ class LeaveRequest < ApplicationRecord
   private
 
   def valid_date
-    return if end_date.blank? || start_date.blank?
+    return if end_date.blank? || start_date.blank? 
 
-    return unless end_date < start_date
+    return unless end_date < start_date || start_date <= Date.today
 
-    errors.add(:end_date, 'must be after the start date')
+    errors.add(:end_date,  'is invalid')
   end
 end

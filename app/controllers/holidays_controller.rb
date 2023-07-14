@@ -1,30 +1,31 @@
+# frozen_string_literal: true
+
 class HolidaysController < ApplicationController
   before_action :authenticate_hr, except: %i[index]
   before_action :find_holiday, only: %i[show update]
-  
+
   def index
-    holidays = Holiday.all
-    render json: holidays
+    render json: Holiday.all, status: :ok
   end
 
   def create
     holiday = Holiday.new(holiday_params)
     if holiday.save
-      render json: holiday
+      render json: holiday, status: :created
     else
-      render json: holiday.errors, status: :unprocessable_entity
+      render json: holiday.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: @holiday
+    render json: @holiday, status: :ok
   end
 
   def update
     if @holiday.update(holiday_params)
-      render json: @holiday
+      render json: @holiday, status: :ok
     else
-      render json: @holiday.errors
+      render json: @holiday.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -36,7 +37,7 @@ class HolidaysController < ApplicationController
 
   def find_holiday
     @holiday = Holiday.find(params[:id])
-  rescue Exception => e
-    render json: { errors: 'Id Not Found' }
+  rescue StandardError
+    render json: { errors: 'Not Found' }
   end
 end

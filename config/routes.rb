@@ -1,28 +1,17 @@
-Rails.application.routes.draw do
-  patch 'approve/:id', to: 'leave_requests#approve_request'
-  patch 'reject/:id', to: 'leave_requests#reject_request'
-  patch '/leave_request/update', to: 'leave_requests#update'
-  delete '/leave_requests/delete', to: 'leave_requests#delete'
-  get '/my_leave/requests', to: 'leave_requests#show'
-  get '/leave_history', to: 'leave_requests#history'
+# frozen_string_literal: true
 
-  get 'employee/all', to: 'hr#index'
-  post 'create/employee', to: 'hr#create'
-  get 'destroy/employee/:id', to: 'hr#destroy'
+Rails.application.routes.draw do
   post 'hr/login', to: 'hr#login'
 
   post 'employee/login', to: 'employees#login'
-  get 'employee/update', to: 'employees#update'
-  get 'employee/status', to: 'employees#show'
-  get '/holidays', to: 'holidays#index'
+  get 'employees', to: 'employees#index'
+  put 'approve/:id', to: 'leave_requests#approve_request'
+  put 'reject/:id', to: 'leave_requests#reject_request'
+  get 'my_leave/requests', to: 'leave_requests#history'
 
-  resources :hr
-  resources :employees
+  resource :employee
   resources :events
-  resources :holidays
-  resources :leave_requests
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :holidays, except: [:destroy]
+  resource :leave_request
 
-  # Defines the root path route ("/")
-  # root "articles#index"
 end

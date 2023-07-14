@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 class EventsController < ApplicationController
   before_action :authenticate_hr, except: %i[index show]
   before_action :find_event, only: %i[show update destroy]
   def index
-    events = Event.all
-    render json: events, status: :ok
+    render json: Event.all, status: :ok
   end
 
   def show
-    render json: @event, status: :found
+    render json: @event, status: :ok
   end
 
   def create
@@ -20,13 +21,18 @@ class EventsController < ApplicationController
   end
 
   def update
-    @event.update(event_params)
-    render json: @event
+    if @event.update(event_params)
+      render json: @event, status: :ok
+    else
+      render json: @event.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    @event.destroy
-    render json: { message: 'Event Deleted !' }
+    @event.destroy!
+    render json: { message: 'Event deleted !' }, status: :ok
+  rescue StandardError
+    render json: { errors: 'Not deleted' }, status: :unprocessable_entity
   end
 
   private
@@ -37,7 +43,7 @@ class EventsController < ApplicationController
 
   def find_event
     @event = Event.find(params[:id])
-  rescue Exception => e
-    render json: { errors: 'Id Not Found' }
+  rescue StandardError
+    render json: { errors: 'Not Found' }, status: :unprocessable_entity
   end
 end
