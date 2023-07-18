@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EventsController < ApplicationController
+class EventsController < ApiController
   before_action :authenticate_hr, except: %i[index show]
   before_action :find_event, only: %i[show update destroy]
   before_action :authenticate, only: %i[index show]

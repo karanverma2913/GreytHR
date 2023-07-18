@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HolidaysController < ApplicationController
+class HolidaysController < ApiController
   before_action :authenticate_hr, only: %i[create update]
   before_action :find_holiday, only: %i[show update]
   before_action :authenticate, only: %i[index show]

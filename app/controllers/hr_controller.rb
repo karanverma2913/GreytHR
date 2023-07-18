@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HrController < ApplicationController
+class HrController < ApiController
   def login
     raise unless params[:email] == EMAIL && params[:password] == PASSWORD
 

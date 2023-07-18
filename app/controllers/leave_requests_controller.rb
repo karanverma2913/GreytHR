@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class LeaveRequestsController < ApplicationController
+class LeaveRequestsController < ApiController
   before_action :authenticate_hr, only: %i[index approve_request reject_request]
   before_action :authenticate_employee, only: %i[show create destroy]
 

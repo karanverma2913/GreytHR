@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class EmployeesController < ApplicationController
+class EmployeesController < ApiController
   before_action :authenticate_employee, only: %i[show update]
   before_action :authenticate_hr, only: %i[create destroy index]
 
