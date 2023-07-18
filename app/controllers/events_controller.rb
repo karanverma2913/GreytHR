@@ -3,6 +3,8 @@
 class EventsController < ApplicationController
   before_action :authenticate_hr, except: %i[index show]
   before_action :find_event, only: %i[show update destroy]
+  before_action :authenticate, only: %i[index show]
+
   def index
     render json: Event.all, status: :ok
   end
@@ -44,6 +46,6 @@ class EventsController < ApplicationController
   def find_event
     @event = Event.find(params[:id])
   rescue StandardError
-    render json: { errors: 'Not Found' }, status: :unprocessable_entity
+    render json: { errors: 'Not Found' }, status: :not_found
   end
 end

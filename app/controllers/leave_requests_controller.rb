@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 class LeaveRequestsController < ApplicationController
-  before_action :authenticate_hr, only: [:index, :approve_request, :reject_request]
-  before_action :authenticate_employee, except: [:index, :approve_request, :reject_request]
+  before_action :authenticate_hr, only: %i[index approve_request reject_request]
+  before_action :authenticate_employee, only: %i[show create destroy]
 
   def index
     leave_requests = LeaveRequest.where(status: 'pending')
     if leave_requests.present?
       render json: leave_requests, status: :ok
     else
-      render json: { message: 'Their is no leave requests' }, status: :unprocessable_entity
+      render json: { message: 'There is no leave requests' }, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: @current_user.leave_requests.all, status: :ok
+    render json: @current_user.leave_requests, status: :ok
   end
 
   def create
@@ -27,8 +27,7 @@ class LeaveRequestsController < ApplicationController
 
     leave_request.days = dif.to_i + 1
     @current_user.balance = @current_user.balance - leave_request.days
-    if leave_request.save
-      @current_user.save
+    if leave_request.save && @current_user.save
       render json: leave_request, status: :created
     else
       render json: leave_request.errors.full_messages, status: :unprocessable_entity
@@ -41,6 +40,7 @@ class LeaveRequestsController < ApplicationController
     last_request = @current_user.leave_requests.last
     raise if last_request.nil? || last_request.status != 'pending'
 
+    @current_user.update(balance: @current_user.balance + last_request.days)
     last_request.destroy!
     render json: { message: 'Leave Request Deleted !' }, status: :ok
   rescue StandardError
@@ -53,7 +53,7 @@ class LeaveRequestsController < ApplicationController
 
     leave_request.status = 'approved'
     leave_request.save
-    render json: { message: "Emp id:#{leave_request.employee_id} leave request is approved " }
+    render json: { message: "Emp id:#{leave_request.employee_id} leave request is approved " }, status: :ok
   rescue StandardError
     render json: { message: 'Not Found' }, status: :unprocessable_entity
   end
@@ -64,9 +64,9 @@ class LeaveRequestsController < ApplicationController
 
     leave_request.status = 'rejected'
     leave_request.save
-    render json: { message: "Emp id:#{leave_request.employee_id} leave request is rejected " }
+    render json: { message: "Emp id: #{leave_request.employee_id} leave request is rejected " }, status: :ok
   rescue StandardError
-    render json: { error: 'Not Found' }
+    render json: { error: 'Not Found' }, status: :unprocessable_entity
   end
 
   private

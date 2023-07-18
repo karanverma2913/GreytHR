@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class HolidaysController < ApplicationController
-  before_action :authenticate_hr, except: %i[index]
+  before_action :authenticate_hr, only: %i[create update]
   before_action :find_holiday, only: %i[show update]
+  before_action :authenticate, only: %i[index show]
 
   def index
     render json: Holiday.all, status: :ok
@@ -38,6 +39,6 @@ class HolidaysController < ApplicationController
   def find_holiday
     @holiday = Holiday.find(params[:id])
   rescue StandardError
-    render json: { errors: 'Not Found' }
+    render json: { errors: 'Not Found' }, staus: :not_found
   end
 end

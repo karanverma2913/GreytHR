@@ -7,11 +7,10 @@ Rails.application.routes.draw do
   get 'employees', to: 'employees#index'
   put 'approve/:id', to: 'leave_requests#approve_request'
   put 'reject/:id', to: 'leave_requests#reject_request'
-  get 'my_leave/requests', to: 'leave_requests#history'
-
+  get 'my_leave/requests', to: 'leave_requests#show', as: 'karan'
+  get 'all_leave_requests', to: 'leave_requests#index'
   resource :employee
   resources :events
   resources :holidays, except: [:destroy]
-  resource :leave_request
-
+  resource :leave_requests
 end

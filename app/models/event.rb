@@ -7,5 +7,4 @@ class Event < ApplicationRecord
   validates :name, uniqueness: true,
                    format: { with: /\A[a-zA-Z]+(?: [a-zA-Z]+)?\z/, message: 'should not contain numbers' }
   validate :valid_date
-
 end

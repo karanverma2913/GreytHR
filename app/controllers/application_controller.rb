@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
     @hr_user = decoded[:email]
     raise unless @hr_user == EMAIL
   rescue StandardError
-    render json: { error: 'HR Token Needed' }
+    render json: { error: 'HR Token Needed' }, status: :unprocessable_entity
   end
 
   def authenticate_employee
@@ -26,16 +26,15 @@ class ApplicationController < ActionController::API
     @current_user = Employee.find_by_email(decoded[:email])
     raise unless @current_user.present?
   rescue StandardError
-    render json: { error: 'Employee Token Needed' }
+    render json: { error: 'Employee Token Needed' }, status: :unprocessable_entity
   end
 
-    def authenticate
+  def authenticate
     header = request.headers['Authorization']
     decoded = jwt_decode(header.split(' ').last)
     @current_user = Employee.find_by_email(decoded[:email])
-    raise unless @current_user.present? || @current_user == EMAIL
+    raise unless @current_user.present? || decoded[:email] == EMAIL
   rescue StandardError
-    render json: { error: 'Unauthorized user' }
+    render json: { error: 'Unauthorized user' }, status: :unprocessable_entity
   end
-
 end
