@@ -11,18 +11,18 @@ gem 'rails', '~> 7.0.6'
 gem 'sqlite3', '~> 1.4'
 
 # Use the Puma web server [https://github.com/puma/puma]
+gem 'activeadmin'
+gem 'activeadmin'
 gem 'active_model_serializers'
 gem 'byebug'
 gem 'date'
+gem 'devise'
 gem 'dotenv-rails'
 gem 'jwt'
 gem 'puma', '~> 5.0'
 gem 'rubocop', '~> 1.54', '>= 1.54.1'
-gem 'activeadmin'
-gem 'devise'
-gem 'activeadmin'
-gem 'sprockets', '<4'
 gem 'sass-rails'
+gem 'sprockets', '<4'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

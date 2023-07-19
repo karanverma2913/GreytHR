@@ -1,5 +1,5 @@
 class ApiController < ActionController::API
-	include JsonWebToken
+  include JsonWebToken
   EMAIL = 'hr@gmail.com'
   PASSWORD = '12345'
 

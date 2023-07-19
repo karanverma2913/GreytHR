@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class LeaveRequestsController < ApiController
   before_action :authenticate_hr, only: %i[index approve_request reject_request]
   before_action :authenticate_employee, only: %i[show create destroy]
@@ -37,6 +35,7 @@ class LeaveRequestsController < ApiController
   end
 
   def destroy
+    byebug
     last_request = @current_user.leave_requests.last
     raise if last_request.nil? || last_request.status != 'pending'
 
@@ -62,6 +61,8 @@ class LeaveRequestsController < ApiController
     leave_request = LeaveRequest.find_by(id: params[:id])
     raise if leave_request.status != 'pending'
 
+    current_user = Employee.find_by(id: leave_request.employee_id)
+    current_user.update(balance: current_user.balance + leave_request.days)
     leave_request.status = 'rejected'
     leave_request.save
     render json: { message: "Emp id: #{leave_request.employee_id} leave request is rejected " }, status: :ok

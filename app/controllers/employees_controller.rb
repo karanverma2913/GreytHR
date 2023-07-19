@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class EmployeesController < ApiController
   before_action :authenticate_employee, only: %i[show update]
   before_action :authenticate_hr, only: %i[create destroy index]
@@ -59,7 +57,7 @@ class EmployeesController < ApiController
     params.permit(:name, :email, :password, :role, :salary, :joining_date, :balance, :image)
   end
 
-  def set_leave_balance(object) 
+  def set_leave_balance(object)
     month = 12 - object.joining_date.strftime('%m').to_i
     if month.positive?
       month += 1

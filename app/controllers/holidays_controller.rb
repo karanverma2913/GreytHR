@@ -1,12 +1,17 @@
-# frozen_string_literal: true
-
 class HolidaysController < ApiController
   before_action :authenticate_hr, only: %i[create update]
   before_action :find_holiday, only: %i[show update]
   before_action :authenticate, only: %i[index show]
 
   def index
-    render json: Holiday.all, status: :ok
+    holiday = Holiday.all
+    arr = []
+    holiday.each do |i|
+      if i.date.year == params[:year].to_i
+        arr.push(i)
+      end
+    end
+    render json: arr, status: :ok
   end
 
   def create

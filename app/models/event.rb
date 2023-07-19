@@ -1,7 +1,8 @@
-# frozen_string_literal: true
-
 require 'date'
 class Event < ApplicationRecord
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at date description id name updated_at]
+  end
   validates :name, :description, presence: true
   validates :date, presence: { message: 'Invalid date' }
   validates :name, uniqueness: true,
