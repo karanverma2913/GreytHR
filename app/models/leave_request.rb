@@ -5,7 +5,7 @@ class LeaveRequest < ApplicationRecord
   end
 
   belongs_to :employee
-  validates :start_date, :end_date, :days, presence: true
+  validates :start_date, :end_date, format: { with: /\d{2}\/\d{2}\/\d{4}/, message: "must be in the following format: mm/dd/yyyy" }
 
   validates :status, inclusion: { in: %w[pending approved rejected],
                                   message: '%<value>s is not a valid' }

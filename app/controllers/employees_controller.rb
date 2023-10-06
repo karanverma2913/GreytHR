@@ -54,7 +54,7 @@ class EmployeesController < ApiController
   end
 
   def employee_params
-    params.permit(:name, :email, :password, :role, :salary, :joining_date, :balance, :image)
+    params.require(:employee).permit(:name, :email, :password, :role, :salary, :joining_date, :balance, :image)
   end
 
   def set_leave_balance(object)
@@ -65,5 +65,6 @@ class EmployeesController < ApiController
     else
       1.5
     end
+  rescue StandardError
   end
 end

@@ -3,7 +3,8 @@
 require 'test_helper'
 
 class EventTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "the truth" do
+    event = Event.new
+    assert event.save
+  end
 end

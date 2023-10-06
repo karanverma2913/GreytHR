@@ -1,10 +1,15 @@
 class ApiController < ActionController::API
+  include Pundit::Authorization
   include JsonWebToken
   EMAIL = 'hr@gmail.com'
   PASSWORD = '12345'
 
   before_action do
     ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }
+  end
+
+  def current_user
+    @hr_user
   end
 
   private
